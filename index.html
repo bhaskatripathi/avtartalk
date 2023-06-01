@@ -84,11 +84,12 @@
             var textToSpeakInput = document.getElementById("texttospeakinput");
             textToSpeakInput.value = "Loading...";
             var apiKey = document.getElementById("apiKeyInput").value;
-            var url = "https://api.openai.com/v1/engines/davinci-codex/completions";
-            var model = "davinci-codex";
+            var url = "https://api.openai.com/v1/chat/completions";
+            var model = "gpt-3.5-turbo";
             var prompt = "Question: " + questionInput.value + "\nAnswer:";
             var maxTokens = 50;
             var data = {
+                "model": model,
                 "prompt": prompt,
                 "max_tokens": maxTokens
             };
@@ -118,7 +119,7 @@
                 textToSpeakInput.value = "Error: " + error;
             });
         }
-
+        
         function playTextToSpeech() {
             var textToSpeakInput = document.getElementById("texttospeakinput");
             var voiceSelecter = document.getElementById("voiceSelecter");
