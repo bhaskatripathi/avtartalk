@@ -1,104 +1,152 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		
-		
-		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
-		<title>
-		TTS GIF Example
-		</title>
-		<meta name="description" content="Example of using GIF files to bring text to speech voices to life in your browser.">
-		<script type="text/javascript" src="./libgif.js"></script>
-	</head>
-	<style>
-			
-		/* the superGifCanvas elements can be styled if you need to*/
-		/*
-		.superGifCanvas {
-			width:100%;
-		}
-		*/
-		* {
-		    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-		}
-		.guierrormessage {
-			color: #FF0000;
-		}
-		.guioption{
-			width: 280px;
-			padding: 0.2em;
-			font-size: 1em;
-			display: inline-block;
-			box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1) inset;
-		}
-		#giferrormessage {
-			display: inline-block;
-		}
-		#newgifbutton {
-		font-size: 1.0rem;
-		padding: 0.5rem 0.6em;
-		background: #69c773;
-		border-bottom: 1px solid #498b50;
-		color: white;
-		-webkit-font-smoothing: antialiased;
-		font-weight: bold;
-		margin: 0;
-		height: 35px;
-		text-align: center;
-		}
-		#texttospeakinput {
-			width:96%;
-		}
-		.superGifCanvas{
-			max-width: 100%; 
-		}
-		#apiKeyInput {
-			width: 96%;
-		}
-	</style>
-	<body>
-		<center>
-		
-		<div id="ttsoptions">
-			<div>
-				<label>Voice:</label>
-			<select id="voiceSelecter" class="guioption"></select>
-		</div>
-		<div>
-                <input type="text" id="apiKeyInput" placeholder="Enter your API key">
-            </div>
-		<div>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <title>TTS GIF Example</title>
+    <meta name="description" content="Example of using GIF files to bring text to speech voices to life in your browser.">
+    <script type="text/javascript" src="./libgif.js"></script>
+</head>
+<style>
+    /* the superGifCanvas elements can be styled if you need to*/
+    /*
+    .superGifCanvas {
+        width:100%;
+    }
+    */
+    * {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    }
+    .guierrormessage {
+        color: #FF0000;
+    }
+    .guioption{
+        width: 280px;
+        padding: 0.2em;
+        font-size: 1em;
+        display: inline-block;
+        box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1) inset;
+    }
+    #giferrormessage {
+        display: inline-block;
+    }
+    #newgifbutton {
+    font-size: 1.0rem;
+    padding: 0.5rem 0.6em;
+    background: #69c773;
+    border-bottom: 1px solid #498b50;
+    color: white;
+    -webkit-font-smoothing: antialiased;
+    font-weight: bold;
+    margin: 0;
+    height: 35px;
+    text-align: center;
+    }
+    #texttospeakinput {
+        width:96%;
+    }
+    .superGifCanvas{
+        max-width: 100%; 
+    }
+</style>
+<body>
+    <center>
+    <div id="ttsoptions">
+        <div>
+            <label>Voice:</label>
+            <select id="voiceSelecter" class="guioption"></select>
+        </div>
+        <div>
+            <input type="text" id="texttospeakinput" value="Pretty cool. I didn't know gifs could talk." class="guioption" onClick="this.setSelectionRange(0, this.value.length)">
+            <div id="texterrormessage" class="guierrormessage"></div>
+        </div>
+        <div>
+            <button id="newgifbutton">GIF</button>
+            <input type="text" id="gifurlinput" value="https://i.imgur.com/ork8hoP.gif" class="guioption" onClick="this.setSelectionRange(0, this.value.length)">
+            <div id="giferrormessage" class="guierrormessage"></div>
+        </div>
+        <div>
+            <input type="text" id="questionInput" value="" placeholder="Enter your question" class="guioption">
+            <div id="questionErrorMessage" class="guierrormessage"></div>
+        </div>
+        <button id="submitQuestionButton" class="guioption" onClick="submitQuestion()">Submit</button>
+    </div>
+    <div id="instructions">Click on the image below to hear the message.</div>
+    <script type="text/javascript">
+        function submitQuestion() {
+            var questionInput = document.getElementById("questionInput");
+            var textToSpeakInput = document.getElementById("texttospeakinput");
+            textToSpeakInput.value = "Loading...";
+            var apiKey = document.getElementById("apiKeyInput").value;
+            var url = "https://api.openai.com/v1/engines/davinci-codex/completions";
+            var model = "davinci-codex";
+            var prompt = "Question: " + questionInput.value + "\nAnswer:";
+            var maxTokens = 50;
+            var data = {
+                "prompt": prompt,
+                "max_tokens": maxTokens
+            };
+            var headers = {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + apiKey
+            };
+            fetch(url, {
+                method: "POST",
+                headers: headers,
+                body: JSON.stringify(data)
+            })
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(data) {
+                var choices = data.choices;
+                if (choices && choices.length > 0) {
+                    var answer = choices[0].text.trim();
+                    textToSpeakInput.value = answer;
+                    playTextToSpeech();
+                } else {
+                    textToSpeakInput.value = "Error: No response received.";
+                }
+            })
+            .catch(function(error) {
+                textToSpeakInput.value = "Error: " + error;
+            });
+        }
 
-			<input type="text" id="texttospeakinput" value="Pretty cool. I didn't know gifs could talk." class="guioption"  onClick="this.setSelectionRange(0, this.value.length)" >
-			<div id="texterrormessage" class="guierrormessage"></div>
-		</div>
-		<div>
-			<button id="newgifbutton">GIF</button>
-			<input type="text" id="gifurlinput" value="https://i.imgur.com/ork8hoP.gif" class="guioption" onClick="this.setSelectionRange(0, this.value.length)">
-			<div id="giferrormessage" class="guierrormessage"></div>
-		</div>
-	</div>
-	<div id="instructions">Click on the image below to hear the message.</div>
-	<script type="text/javascript">
-	</script>
-	<div >
-		<a href="javascript:playsyncronized()">
-			<div id="imagecontainer">
-				<img id="exampleimg" src="https://i.imgur.com/ork8hoP.gif" rel:animated_src="https://i.imgur.com/ork8hoP.gif" rel:auto_play="0" />
-			</div>
-		</a>
-	</div>
-	<br>
-	
-	<div id="footer">
-		<h3>More Information</h3>
-		<div><a href="https://github.com/talkr-app/gif-talkr">Github Project</a></div>
-		<div><a href="https://imgur.com/a/NRZVQ">Sample GIFs</a></div>
-		<div><a href="https://talkrapp.com">Talkr</a></div>
-		<script type="text/javascript" src="./example.js"></script>
-	</div>
-	</center>
-</div>
+        function playTextToSpeech() {
+            var textToSpeakInput = document.getElementById("texttospeakinput");
+            var voiceSelecter = document.getElementById("voiceSelecter");
+            var voice = voiceSelecter.options[voiceSelecter.selectedIndex].value;
+            var ttsUrl = "https://api.talkrapp.com/api/synthesize?text=" + encodeURIComponent(textToSpeakInput.value) + "&voice=" + voice + "&codec=mp3";
+            var audio = new Audio(ttsUrl);
+            audio.play();
+        }
+
+        function init() {
+            var apiKeyInput = document.getElementById("apiKeyInput");
+            apiKeyInput.addEventListener("input", function(event) {
+                var submitQuestionButton = document.getElementById("submitQuestionButton");
+                submitQuestionButton.disabled = event.target.value === "";
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", init);
+    </script>
+    <div >
+        <a href="javascript:playTextToSpeech()">
+            <div id="imagecontainer">
+                <img id="exampleimg" src="https://i.imgur.com/ork8hoP.gif" rel:animated_src="https://i.imgur.com/ork8hoP.gif" rel:auto_play="0" />
+            </div>
+        </a>
+    </div>
+    <br>
+    <div id="footer">
+        <h3>More Information</h3>
+        <div><a href="https://github.com/talkr-app/gif-talkr">Github Project</a></div>
+        <div><a href="https://imgur.com/a/NRZVQ">Sample GIFs</a></div>
+        <div><a href="https://talkrapp.com">Talkr</a></div>
+        <script type="text/javascript" src="./example.js"></script>
+    </div>
+    </center>
 </body>
 </html>
