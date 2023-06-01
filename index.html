@@ -69,7 +69,13 @@
             <input type="text" id="questionInput" value="" placeholder="Enter your question" class="guioption">
             <div id="questionErrorMessage" class="guierrormessage"></div>
         </div>
-        <button id="submitQuestionButton" class="guioption" onClick="submitQuestion()">Submit</button>
+        <div>
+            <input type="text" id="apiKeyInput" value="" placeholder="Enter your OpenAI API key" class="guioption">
+            <div id="apiKeyErrorMessage" class="guierrormessage"></div>
+        </div>
+        <div>
+            <button id="submitQuestionButton" disabled>Submit Question</button>
+        </div>
     </div>
     <div id="instructions">Click on the image below to hear the message.</div>
     <script type="text/javascript">
@@ -128,6 +134,9 @@
                 var submitQuestionButton = document.getElementById("submitQuestionButton");
                 submitQuestionButton.disabled = event.target.value === "";
             });
+
+            var submitQuestionButton = document.getElementById("submitQuestionButton");
+            submitQuestionButton.addEventListener("click", submitQuestion);
         }
 
         document.addEventListener("DOMContentLoaded", init);
@@ -148,5 +157,6 @@
         <script type="text/javascript" src="./example.js"></script>
     </div>
     </center>
+</div>
 </body>
 </html>
