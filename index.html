@@ -85,7 +85,7 @@
     textToSpeakInput.value = "Loading...";
     var apiKey = document.getElementById("apiKeyInput").value;
     var url = "https://api.openai.com/v1/chat/completions";
-    var model = "gpt-3.5-turbo";
+    var model = "text-davinci-003";
     var prompt = "Question: " + questionInput.value + "\nAnswer:";
     var maxTokens = 50;
     var messages = [
@@ -126,6 +126,7 @@
         textToSpeakInput.value = "Error: " + error;
     });
 }
+
 
         
         function playTextToSpeech() {
