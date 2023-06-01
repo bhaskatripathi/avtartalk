@@ -80,45 +80,53 @@
     <div id="instructions">Click on the image below to hear the message.</div>
     <script type="text/javascript">
         function submitQuestion() {
-            var questionInput = document.getElementById("questionInput");
-            var textToSpeakInput = document.getElementById("texttospeakinput");
-            textToSpeakInput.value = "Loading...";
-            var apiKey = document.getElementById("apiKeyInput").value;
-            var url = "https://api.openai.com/v1/chat/completions";
-            var model = "gpt-3.5-turbo";
-            var prompt = "Question: " + questionInput.value + "\nAnswer:";
-            var maxTokens = 50;
-            var data = {
-                "model": model,
-                "prompt": prompt,
-                "max_tokens": maxTokens
-            };
-            var headers = {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + apiKey
-            };
-            fetch(url, {
-                method: "POST",
-                headers: headers,
-                body: JSON.stringify(data)
-            })
-            .then(function(response) {
-                return response.json();
-            })
-            .then(function(data) {
-                var choices = data.choices;
-                if (choices && choices.length > 0) {
-                    var answer = choices[0].text.trim();
-                    textToSpeakInput.value = answer;
-                    playTextToSpeech();
-                } else {
-                    textToSpeakInput.value = "Error: No response received.";
-                }
-            })
-            .catch(function(error) {
-                textToSpeakInput.value = "Error: " + error;
-            });
+    var questionInput = document.getElementById("questionInput");
+    var textToSpeakInput = document.getElementById("texttospeakinput");
+    textToSpeakInput.value = "Loading...";
+    var apiKey = document.getElementById("apiKeyInput").value;
+    var url = "https://api.openai.com/v1/chat/completions";
+    var model = "gpt-3.5-turbo";
+    var prompt = "Question: " + questionInput.value + "\nAnswer:";
+    var maxTokens = 50;
+    var messages = [
+        {
+            "role": "user",
+            "content": questionInput.value
         }
+    ];
+    var data = {
+        "model": model,
+        "prompt": prompt,
+        "max_tokens": maxTokens,
+        "messages": messages
+    };
+    var headers = {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + apiKey
+    };
+    fetch(url, {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify(data)
+    })
+    .then(function(response) {
+        return response.json();
+    })
+    .then(function(data) {
+        var choices = data.choices;
+        if (choices && choices.length > 0) {
+            var answer = choices[0].text.trim();
+            textToSpeakInput.value = answer;
+            playTextToSpeech();
+        } else {
+            textToSpeakInput.value = "Error: No response received.";
+        }
+    })
+    .catch(function(error) {
+        textToSpeakInput.value = "Error: " + error;
+    });
+}
+
         
         function playTextToSpeech() {
             var textToSpeakInput = document.getElementById("texttospeakinput");
