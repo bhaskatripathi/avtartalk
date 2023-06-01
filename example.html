@@ -53,6 +53,9 @@
 		.superGifCanvas{
 			max-width: 100%; 
 		}
+		#apiKeyInput {
+			width: 96%;
+		}
 	</style>
 	<body>
 		<center>
@@ -62,6 +65,9 @@
 				<label>Voice:</label>
 			<select id="voiceSelecter" class="guioption"></select>
 		</div>
+		<div>
+                <input type="text" id="apiKeyInput" placeholder="Enter your API key">
+            </div>
 		<div>
 
 			<input type="text" id="texttospeakinput" value="Pretty cool. I didn't know gifs could talk." class="guioption"  onClick="this.setSelectionRange(0, this.value.length)" >
