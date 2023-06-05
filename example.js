@@ -214,6 +214,7 @@ document.addEventListener("keypress", function(e) {
 document.getElementById('submitQuestion').addEventListener('click', function() {
     var question = document.getElementById('questionInput').value;
     var openAIKey = document.getElementById('openAIKeyInput').value;
+	console.log('API key:', openAIKey);
 
 	var myHeaders = new Headers();
 	myHeaders.append('Content-Type', 'application/json');
