@@ -215,17 +215,18 @@ document.getElementById('submitQuestion').addEventListener('click', function() {
     var question = document.getElementById('questionInput').value;
     var openAIKey = document.getElementById('openAIKeyInput').value;
 
-    fetch('https://api.openai.com/v1/engines/davinci-codex/completions', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + openAIKey
-        },
-        body: JSON.stringify({
-            'prompt': question,
-            'max_tokens': 60
-        })
-    })
+	var myHeaders = new Headers();
+	myHeaders.append('Content-Type', 'application/json');
+	myHeaders.append('Authorization', 'Bearer ' + openAIKey);
+
+	fetch('https://api.openai.com/v1/engines/davinci-codex/completions', {
+	    method: 'POST',
+	    headers: myHeaders,
+	    body: JSON.stringify({
+		'prompt': question,
+		'max_tokens': 60
+	    })
+	})
     .then(response => response.json())
     .then(data => {
         document.getElementById('texttospeakinput').value = data.choices[0].text;
