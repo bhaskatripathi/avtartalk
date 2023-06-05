@@ -135,39 +135,6 @@ if(newgifbutton){
 // Playing TTS in sync
 // ---------------------
 
-function handleUserQuestion() {
-    var questionInput = document.getElementById("questionInput");
-    var userQuestion = questionInput.value;
-
-    var apiKeyInput = document.getElementById("apiKeyInput");
-    var apiKey = apiKeyInput.value;
-
-    // Send the user's question to the OpenAI API
-    fetch("https://api.openai.com/v1/engines/davinci-codex/completions", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + apiKey
-        },
-        body: JSON.stringify({
-            prompt: userQuestion,
-            max_tokens: 50, // Adjust the number of tokens based on your requirements
-            temperature: 0.7 // Adjust the temperature value for response randomness
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        var chatbotResponse = data.choices[0].text.trim();
-        var textToSpeakInput = document.getElementById("texttospeakinput");
-        textToSpeakInput.value = chatbotResponse;
-        playsyncronized();
-    })
-    .catch(error => {
-        console.error("Error:", error);
-    });
-}
-
-
 // play the specified text 
 function playsyncronized(){
 
@@ -235,7 +202,6 @@ function playsyncronized(){
 }
 document.addEventListener("keypress", function(e) {
     if (e.which == 13) {
-        //playsyncronized();
-		handleUserQuestion();
+        playsyncronized();
     }
 });
